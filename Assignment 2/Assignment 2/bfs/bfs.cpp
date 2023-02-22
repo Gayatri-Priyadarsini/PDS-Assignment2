@@ -436,41 +436,41 @@ void bfs_hybrid(Graph graph, solution* sol)
         //------------------------------------
 
             //idk
-        int m_f=0;
-        int m_u=0;
-        int n_f=frontier->count;
-        int alpha=14;
-        int beta=24;
+        // int m_f=0;
+        // int m_u=0;
+        // int n_f=frontier->count;
+        // int alpha=14;
+        // int beta=24;
 
-        for(int i=0;i<frontier->count;i++)
-        {
-            int start_edge = graph->outgoing_starts[i];
-            int end_edge = (i == graph->num_nodes - 1)
-                               ? graph->num_edges
-                               : graph->outgoing_starts[i + 1];
+        // for(int i=0;i<frontier->count;i++)
+        // {
+        //     int start_edge = graph->outgoing_starts[i];
+        //     int end_edge = (i == graph->num_nodes - 1)
+        //                        ? graph->num_edges
+        //                        : graph->outgoing_starts[i + 1];
 
-            int num_neighbours=end_edge-start_edge;
-            m_f=m_f+num_neighbours;
-        }
+        //     int num_neighbours=end_edge-start_edge;
+        //     m_f=m_f+num_neighbours;
+        // }
 
-        for(int i=0;i<graph->num_nodes;i++)
-        {   
-            if(sol->distances[i]==NOT_VISITED_MARKER)
-            {
-                int start_edge = graph->outgoing_starts[i];
-                int end_edge = (i == graph->num_nodes - 1)
-                                   ? graph->num_edges
-                                   : graph->outgoing_starts[i + 1];
+        // for(int i=0;i<graph->num_nodes;i++)
+        // {   
+        //     if(sol->distances[i]==NOT_VISITED_MARKER)
+        //     {
+        //         int start_edge = graph->outgoing_starts[i];
+        //         int end_edge = (i == graph->num_nodes - 1)
+        //                            ? graph->num_edges
+        //                            : graph->outgoing_starts[i + 1];
 
-                int num_neighbours=end_edge-start_edge;
-                m_u=m_u+num_neighbours;
-            }
-        }
+        //         int num_neighbours=end_edge-start_edge;
+        //         m_u=m_u+num_neighbours;
+        //     }
+        // }
 
-        //printf("%d,%d",m_f,m_u);
+        // //printf("%d,%d",m_f,m_u);
 
-        int c_tb= m_u/alpha;
-        int c_bt= (graph->num_nodes)/beta;
+        // int c_tb= m_u/alpha;
+        // int c_bt= (graph->num_nodes)/beta;
 
         // printf("%d,%d",c_tb,c_bt);
 
@@ -490,12 +490,10 @@ void bfs_hybrid(Graph graph, solution* sol)
         //     top_down_step_parallel(graph, frontier, new_frontier, sol->distances);
         // }
 
-        if ((double)frontier->count / graph->num_nodes > 0.1) {
+        if ((double)frontier->count / graph->num_nodes > 0.03) {
             bottom_up_step_parallel(graph, visited, frontier, new_frontier, sol->distances);
-        } else if (frontier->count >= 32 * 32){
+        }else{
             top_down_step_parallel(graph, frontier, new_frontier, sol->distances);
-        } else {
-            top_down_step(graph, frontier, new_frontier, sol->distances);
         }
         update_visited(new_frontier, visited);
 
