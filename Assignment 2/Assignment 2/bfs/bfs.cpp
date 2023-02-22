@@ -90,23 +90,6 @@ void top_down_step_parallel(
                 int outgoing = g->outgoing_edges[neighbor];
 
                 if (distances[outgoing] == NOT_VISITED_MARKER) {
-
-                    // int insert = distances[outgoing];
-                    // #pragma omp atomic capture
-                    // {   insert = distances[outgoing];
-                    //     distances[outgoing] = distances[node] + 1;
-                    // }
-                    
-                    // if(insert == NOT_VISITED_MARKER)
-                    // {
-                    //     int index = local_new_frontier->count++;
-                    //     local_new_frontier->vertices[index] = outgoing;
-                    // }
-
-                    // if (__sync_bool_compare_and_swap(&distances[outgoing], NOT_VISITED_MARKER, new_frontier_distance)) {
-                    //     to_be_added[counter] = outgoing;
-                    //     counter++;
-                    // }
                     int idx;
                     if (distances[outgoing]==NOT_VISITED_MARKER)
                     { 
@@ -240,59 +223,6 @@ void bottom_up_step_parallel(
     vertex_set* new_frontier,
     int* distances)
 {
-
-    // // obtain the distance for the current frontier
-    // int new_frontier_distance = distances[frontier->vertices[0]] + 1;
-    // int nodes_per_thread = 256; 
-
-    // // loop through all the vertices in the graph
-    // #pragma omp parallel for schedule(dynamic)
-    // // {   
-    //     // int tid=omp_get_thread_num();
-    //     // int nthreads=omp_get_num_threads();
-    //     for (int j = 0; j < g->num_nodes; j += nodes_per_thread)
-    //     {
-    //         // for the last iteration, if the number of nodes assigned
-    //         // exceeds the maximum, set a ceiling to the size
-    //         int size = (nodes_per_thread + j >= g->num_nodes) ? g->num_nodes - j : nodes_per_thread;
-    //         int counter = 0;
-    //         int to_be_added[size];
-            
-    //         for (int i = j; i < j+size; i++) {
-    //             if (visited[i]) continue;
-    //             // if (distances[i]==0) continue;
-    //             int start_edge = g->incoming_starts[i];
-    //             int end_edge = (i == g->num_nodes - 1)
-    //                             ? g->num_edges
-    //                             : g->incoming_starts[i + 1];
-
-    //             int num_neighbours=end_edge-start_edge;
-    //             int to_be_added[num_neighbours];
-    //             int counter =0;
-
-    //             // loop through all the neighbours for the given vertex
-    //             for (int neighbour = start_edge; neighbour < end_edge; neighbour++) {
-    //                 int incoming = g->incoming_edges[neighbour];
-    //                 if (!visited[incoming]) continue;
-    //                 to_be_added[counter] = i;
-    //                 counter++;
-    //                 break;
-    //             }
-    //         }
-    //         int index = __sync_fetch_and_add(&new_frontier->count, counter);
-    //         // int index;
-    //         // #pragma omp atomic capture
-    //         // {   
-    //         //     index=new_frontier->count;
-    //         //     new_frontier->count+=counter;    
-    //         // }
-    //         for (int i = 0; i < counter; i++){
-    //             new_frontier->vertices[index + i] = to_be_added[i];
-    //             distances[to_be_added[i]] = new_frontier_distance;
-    //         }
-    //     }
-
-    // }
 
     // obtain the distance for the current frontier
     int new_frontier_distance = distances[frontier->vertices[0]] + 1;
@@ -435,7 +365,7 @@ void bfs_hybrid(Graph graph, solution* sol)
 
         //------------------------------------
 
-            //idk
+        //     //idk
         // int m_f=0;
         // int m_u=0;
         // int n_f=frontier->count;
@@ -467,7 +397,7 @@ void bfs_hybrid(Graph graph, solution* sol)
         //     }
         // }
 
-        // //printf("%d,%d",m_f,m_u);
+        //printf("%d,%d",m_f,m_u);
 
         // int c_tb= m_u/alpha;
         // int c_bt= (graph->num_nodes)/beta;
@@ -492,7 +422,7 @@ void bfs_hybrid(Graph graph, solution* sol)
 
         if ((double)frontier->count / graph->num_nodes > 0.03) {
             bottom_up_step_parallel(graph, visited, frontier, new_frontier, sol->distances);
-        }else{
+        } else{
             top_down_step_parallel(graph, frontier, new_frontier, sol->distances);
         }
         update_visited(new_frontier, visited);
